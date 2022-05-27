@@ -22,7 +22,7 @@ class ImageDataset(Dataset):
                  max_length:int=25,
                  check_length:bool=True,
                  case_sensitive:bool=False,
-                 charset_path:str='data/charset_36hangul.txt',
+                 charset_path:str='/home/ubuntu/SharedForMultiNodes/Dataset/ABINet_dataset/charset_36hangul_punc.txt',
                  convert_mode:str='RGB',
                  data_aug:bool=True,
                  deteriorate_ratio:float=0.,
@@ -96,8 +96,9 @@ class ImageDataset(Dataset):
         with self.env.begin(write=False) as txn:
             image_key, label_key = f'image-{idx+1:09d}', f'label-{idx+1:09d}'
             try:
-                label = str(txn.get(label_key.encode()), 'utf-8')  # label
-                label = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]+', '', label)
+                label = str(txn.get(label_key.encode()), 'utf-8')  # label        
+                label = label.replace('`', "'")
+                label = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#$%\^&*(){}?-\\~\[\]:;,"\.<>\'/「」_=+『』| ]+', '', label)
                 if self.check_length and self.max_length > 0:
                     if len(label) > self.max_length or len(label) <= 0:
                         #logging.info(f'Long or short text image is found: {self.name}, {idx}, {label}, {len(label)}')
@@ -176,7 +177,8 @@ class TextDataset(Dataset):
 
     def __getitem__(self, idx):
         text_x = self.df.iloc[idx, self.inp_col]
-        text_x = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]+', '', text_x)
+        text_x = text_x.replace('`', "'") # `를 '로 변환
+        text_x = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#$%\^&*(){}?-\\~\[\]:;,"\.<>\'/「」_=+『』| ]+', '', text_x)
         if not self.case_sensitive: text_x = text_x.lower()
         if self.is_training and self.use_sm: text_x = self.sm(text_x)
 
@@ -189,8 +191,9 @@ class TextDataset(Dataset):
                 label_x = torch.stack([self.prob_smooth_label(l) for l in label_x])
         x =  [label_x, length_x]
     
-        text_y = self.df.iloc[idx, self.gt_col]
-        text_y = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]+', '', text_y)
+        text_y = self.df.iloc[idx, self.gt_col]     
+        text_y = text_y.replace('`', "'") # `를 '로 변환
+        text_y = re.sub('[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#$%\^&*(){}?-\\~\[\]:;,"\.<>\'/「」_=+『』| ]+', '', text_y)
         if not self.case_sensitive: text_y = text_y.lower()
         length_y = tensor(len(text_y) + 1).to(dtype=torch.long)  # one for end token
         label_y = self.charset.get_labels(text_y, case_sensitive=self.case_sensitive)

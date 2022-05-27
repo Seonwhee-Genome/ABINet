@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 from torch import Tensor, nn
 from torch.utils.data import ConcatDataset
 
+
 class CharsetMapper(object):
     """A simple class to map ids into strings.
 
@@ -85,6 +86,7 @@ class CharsetMapper(object):
         if not case_sensitive:
             text = text.lower()
         labels = [self.char_to_label[char] for char in text]
+                
         return labels
 
     def pad_labels(self, labels, length=None):
@@ -105,7 +107,7 @@ class CharsetMapper(object):
         all_chars = list(self.char_to_label.keys())
         valid_chars = []
         for c in all_chars:
-            if c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ':
+            if c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ!@#$%^&*(){}?-\\~[]:;,".<>\'/「」_=+『』| ':
                 valid_chars.append(c)
         return ''.join(valid_chars)
 
