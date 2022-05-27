@@ -27,9 +27,12 @@ if __name__=="__main__":
     hangul = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ"
     gana = "ーぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ゛-゜"
     chinesechar= "生新辛綠紅黒黃茶牛肉安城湯麵台湾鳳梨酥名物"
+    punctuation = "!@ #$%^&*(){}?-\\~[]:;,\".<>'/「」_=+『』|·" # 공백 한칸(\xa0)도 포함
     
     charSet = writeCharset(0, alphabet)
     charSet = charSet + writeCharset(len(alphabet), digit) # 인덱스 번호가 이어지도록 누적한다.
     charSet = charSet + writeCharset(len(alphabet)+len(digit), hangul) # 인덱스 번호가 이어지도록 누적한다
+    #charSet = charSet + writeCharset(len(alphabet)+len(digit)+len(hangul), chinesechar) # 인덱스 번호가 이어지도록 누적한다
+    charSet = charSet + writeCharset(len(alphabet)+len(digit)+len(hangul), punctuation) # 인덱스 번호가 이어지도록 누적한다
     
-    writeFile("/home/ubuntu/Playground/ABINet/data/charset_36hangul.txt", charSet)
+    writeFile("/home/ubuntu/SharedForMultiNodes/Dataset/ABINet_dataset/charset_36hangul_punc.txt", charSet)
